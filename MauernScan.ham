@@ -1,0 +1,34 @@
+/*object-oriented program*/class MeinHamster extends Hamster {
+
+	void rechtsUm() {
+  	linksUm();
+    linksUm();
+    linksUm();
+  }
+}
+
+
+void main() {
+	MeinHamster hamster1 = new MeinHamster();
+	Hamster standard = Hamster.getStandardHamster();
+	
+	if (!Territorium.mauerDa(standard.getReihe(), standard.getSpalte() )){
+		hamster1.init(standard.getReihe(),standard.getSpalte(),standard.getBlickrichtung(),standard.getAnzahlKoerner() );
+	}//Schaut ob auf dem Startfeld eine Mauer ist und initalisiert Hamster erst dann
+
+	int[][] karte = new int[Territorium.getAnzahlReihen()][Territorium.getAnzahlSpalten()];
+	
+	for (int i = 0; i < karte.length; i++) {
+		for (int j = 0; j < karte.length; j++) {
+			if(Territorium.mauerDa(i,j)){
+				karte[i][j]=1;
+			}
+		}
+	}
+	
+	for (int i = 0; i < karte.length; i++) {
+		for (int j = 0; j < karte.length; j++) {
+	   	hamster1.schreib("Array Werte" + "[" + i +"]" + "[" + j + "] : " + karte[i][j]);
+		}
+	}
+}
