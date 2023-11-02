@@ -14,9 +14,6 @@ vor();
 } 
 }
 }
-public void main() {
-HamsterV2 h = new HamsterV2();
-h.init(0,0,Hamster.OST, 0);
-h.laufeBisZurWand();    
+public void main() {    
 }
 }
