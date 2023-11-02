@@ -1,2 +1,2 @@
 # einfuehrungs_projekt
-Projekt des Moduls Einführung in die Programmierung, bestehend aus 3 Teilen
+Project of the module Introduction to Programming, consisting of 3 parts and realised with the depth first search (DFS).
