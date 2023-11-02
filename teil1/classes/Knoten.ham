@@ -1,0 +1,30 @@
+/*object-oriented program*/class Knoten{
+
+	private Position position;
+	private int status;
+	
+	
+	//Konstruktor der Klasse Knoten
+	public Knoten(Position position,int status){
+		
+		this.position = position;
+		this.status = status;
+	}
+	
+	//getter und setter Methoden
+	public Position getPosition(){
+		
+		return position;
+	}
+	
+	public int getStatus(){
+	
+		return status;
+	}
+	
+	public void setStatus(int status){
+		
+		this.status = status;
+	}
+	
+}
