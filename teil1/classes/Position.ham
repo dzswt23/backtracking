@@ -1,4 +1,4 @@
-/*class*/class Position {
+/*class*/public class Position {
     // Attribute
 	private int reihe, spalte;
 	private boolean mauerDa, kornDa;
