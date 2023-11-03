@@ -1,0 +1,18 @@
+/*object-oriented program*/class HamsterV2 extends Hamster{
+
+void kehrt(){
+linksUm();
+linksUm();
+}
+void rechtsUm(){
+kehrt();
+linksUm();
+}
+void laufeBisZurWand(){
+while(vornFrei()){
+vor();
+} 
+}
+}
+void main() {    
+}
