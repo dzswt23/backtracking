@@ -1,0 +1,40 @@
+/*class*/public class Knoten{
+
+	private Position position;
+	private int status;
+	private Knoten[] nachbarn;
+	
+	
+	//Konstruktor der Klasse Knoten
+	Knoten(Position position,int status,Knoten[] nachbarn){
+		this.position = position;
+		this.status = status;
+		nachbarn = new Knoten[4];
+	}
+	
+	//getter und setter Methoden
+	public Position getPosition(){
+		return position;
+	}
+	
+	public int getStatus(){
+	
+		return status;
+	}
+	
+	public void setStatus(int status){
+		
+		this.status = status;
+	}
+	
+	public Knoten[] getNachbarn(){
+		
+		return nachbarn;
+	}
+	
+	public void setNachbarn(Knoten[] nachbarn){
+		this.nachbarn = nachbarn;
+		
+	}
+	
+}
