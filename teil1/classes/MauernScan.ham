@@ -1,34 +1,132 @@
 /*object-oriented program*/class MeinHamster extends Hamster {
-
-	void rechtsUm() {
-  	linksUm();
-    linksUm();
-    linksUm();
-  }
+    void rechtsUm() {
+        linksUm();
+        linksUm();
+        linksUm();
+    }
+    
+    void setBlickrichtung(int blickrichtung){
+    	while(getBlickrichtung()!= blickrichtung){
+    		linksUm();	
+    	}
+    }
 }
 
+class Backtracking {
+    MeinHamster hamster1 = new MeinHamster();
+    Hamster standard = Hamster.getStandardHamster();
+    
+    int[][] karte;
+    int kornX;
+    int kornY;
+
+    int[][] scanneKarte() {
+  		karte = new int[Territorium.getAnzahlReihen()][Territorium.getAnzahlSpalten()];
+        for (int x = 0; x < karte.length; x++) {
+            for (int y = 0; y < karte.length; y++) {
+                if (Territorium.mauerDa(x, y)) {
+                    karte[x][y] = 1;
+                } else if (Territorium.getAnzahlKoerner(x, y) > 0) {
+                    karte[x][y] = 2;
+                    kornX=x;
+                    kornY=y;
+                } else if (Territorium.getAnzahlHamster(x, y) > 0) {
+                    karte[x][y] = 3;
+                } else {
+                    karte[x][y] = 0;
+                }
+            }
+        }
+        return karte;
+    }
+    
+    //0=Leer
+    //1=Mauer
+    //2=Korner
+    //3=Hamster
+    //4=Weg
+    
+ 	 boolean canGo(int x, int y) {
+		return x>=0 && y>=0 && x< Territorium.getAnzahlReihen() && y < Territorium.getAnzahlSpalten() && karte[x][y] != 1 && karte[x][y] != 4;
+	}
+	
+	 void findRoute(int x, int y) {
+		karte[x][y] = 3;
+		if(!step(x,y)) {
+			hamster1.schreib("Ziel nicht erreichbar");
+		}
+	}
+	
+	
+     boolean step(int x, int y) {
+
+		if(!canGo(x, y)) {		
+			return false;
+		}
+		
+		if(karte[x][y]==2) {
+			hamster1.schreib("Weg gefunden");
+			return true;
+		}
+		
+		karte[x][y] = 4;
+		
+		if(step(x,y+1)) {
+			hamster1.setBlickrichtung(1);
+			hamster1.vor();
+			return true;
+		}
+		if(step(x,y-1)) {
+			hamster1.setBlickrichtung(3);
+			hamster1.vor();
+			return true;
+		}
+		if(step(x+1,y)) {
+			hamster1.setBlickrichtung(2);
+			hamster1.vor();
+			return true;
+		}
+		if(step(x-1,y)) {
+			hamster1.setBlickrichtung(0);
+			hamster1.vor();
+			return true;
+		}
+		
+		karte[x][y] = 0;
+		return false;
+	}
+    
+/*
+    void ausgabeKarte(MeinHamster hamster1, int[][] karte) {
+        for (int x = 0; x < karte.length; x++) {
+            for (int y = 0; y < karte.length; y++) {
+                hamster1.schreib("Array Werte" + "[" + x + "]" + "[" + y + "] : " + karte[x][y]);
+            }
+        }
+    }
+    
+*/
+
+	public int getkornX(){
+		return kornX;
+	}
+	
+	public int getkornY(){
+		return kornY;
+	}
+
+	
+}
 
 void main() {
-	MeinHamster hamster1 = new MeinHamster();
-	Hamster standard = Hamster.getStandardHamster();
-	
-	if (!Territorium.mauerDa(standard.getReihe(), standard.getSpalte() )){
-		hamster1.init(standard.getReihe(),standard.getSpalte(),standard.getBlickrichtung(),standard.getAnzahlKoerner() );
-	}//Schaut ob auf dem Startfeld eine Mauer ist und initalisiert Hamster erst dann
+    Backtracking backtracking = new Backtracking();
 
-	int[][] karte = new int[Territorium.getAnzahlReihen()][Territorium.getAnzahlSpalten()];
-	
-	for (int i = 0; i < karte.length; i++) {
-		for (int j = 0; j < karte.length; j++) {
-			if(Territorium.mauerDa(i,j)){
-				karte[i][j]=1;
-			}
-		}
-	}
-	
-	for (int i = 0; i < karte.length; i++) {
-		for (int j = 0; j < karte.length; j++) {
-	   	hamster1.schreib("Array Werte" + "[" + i +"]" + "[" + j + "] : " + karte[i][j]);
-		}
-	}
+    if (!Territorium.mauerDa(backtracking.standard.getReihe(), backtracking.standard.getSpalte())) {
+        backtracking.hamster1.init(backtracking.standard.getReihe(), backtracking.standard.getSpalte(),
+                backtracking.standard.getBlickrichtung(), backtracking.standard.getAnzahlKoerner());
+    } // Schaut ob auf dem Startfeld eine Mauer ist und initialisiert Hamster erst dann
+
+    int[][] karte = backtracking.scanneKarte();
+   // backtracking.ausgabeKarte(backtracking.hamster1, karte);
+	backtracking.findRoute(backtracking.hamster1.getReihe(), backtracking.hamster1.getSpalte());
 }
