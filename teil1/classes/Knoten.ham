@@ -1,21 +1,19 @@
-/*object-oriented program*/class Knoten{
+/*class*/public class Knoten{
 
 	private Position position;
 	private int status;
-	private Knoten[4] nachbarn;
+	private Knoten[] nachbarn;
 	
 	
 	//Konstruktor der Klasse Knoten
-	public Knoten(Position position,int status,Knoten[] nachbarn){
-		
+	Knoten(Position position,int status,Knoten[] nachbarn){
 		this.position = position;
 		this.status = status;
-		nachbarn = new Knoten[]{};
+		nachbarn = new Knoten[4];
 	}
 	
 	//getter und setter Methoden
 	public Position getPosition(){
-		
 		return position;
 	}
 	
