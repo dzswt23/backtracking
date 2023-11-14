@@ -1,0 +1,66 @@
+/*imperative program*/class MeinHamster extends Hamster {
+	int anzahlKoerner;
+
+	void rechtsUm() {
+  	linksUm();
+    linksUm();
+    linksUm();
+  }
+  
+  void sammleKoerner() {
+		while (kornDa()) {
+			nimm();
+      anzahlKoerner++;
+    }
+  }
+  
+  void gibHaelfte() {
+		for (int i = 0; i < (anzahlKoerner / 2); i++) {
+			gib();
+    }
+  }
+}
+
+void laufeGerade(int schrittweite, boolean sammle, MeinHamster hamster1, MeinHamster hamster2) {
+	for (int i = 0; i < schrittweite; i++) {
+		hamster1.vor();
+		hamster2.vor();
+    if (sammle) {
+    	hamster1.sammleKoerner();
+      hamster2.sammleKoerner();
+    }
+	}
+}
+
+void spirale(MeinHamster hamster1, MeinHamster hamster2) {
+	for (int i = 9; i > 0; i--) {
+		laufeGerade(i, true, hamster1, hamster2);
+    rechtsUm(hamster1, hamster2);
+	}
+}
+
+void spiraleZurueck(MeinHamster hamster1, MeinHamster hamster2) {
+	for (int i = 1; i <= 9; i++) {
+		laufeGerade(i, false, hamster1, hamster2);
+		hamster1.linksUm();
+		hamster2.linksUm();
+	}
+}
+
+void rechtsUm(MeinHamster hamster1, MeinHamster hamster2) {
+	hamster1.rechtsUm();
+  hamster2.rechtsUm();
+}
+
+void main() {
+	MeinHamster hamster1 = new MeinHamster();
+	hamster1.init(0, 0, Hamster.OST, 0);
+	MeinHamster hamster2 = new MeinHamster();
+	hamster2.init(9, 13, Hamster.WEST, 0);
+  spirale(hamster1, hamster2);
+  rechtsUm(hamster1, hamster2);
+  spiraleZurueck(hamster1, hamster2);
+    
+  hamster1.gibHaelfte();//Eventuell in eine Methode packen und abwechselnd ausgben
+  hamster2.gibHaelfte();//Eventuell in eine Methode packen und abwechselnd ausgben
+}
