@@ -1,0 +1,165 @@
+/*object-oriented program*/class MeinHamster extends Hamster {
+    void setBlickrichtung(int blickrichtung){
+    	while(getBlickrichtung()!= blickrichtung){
+    		linksUm();	
+    	}
+    }
+}
+
+class knoten{
+	int x;	//koordinaten von Knoten/Gabelunngen Speichern
+	int y;	//koordinaten von Knoten/Gabelunngen Speichern
+	
+	public knoten(int x, int y){//konstruktor
+		this.x = x;//knoten zurückschreiben x
+		this.y = y;//knoten zurückschreiben y
+	}
+}
+
+class Backtracking {//Tiefensuche
+    MeinHamster hamster1 = new MeinHamster();
+    Hamster standard = Hamster.getStandardHamster();
+    static int COLCOUNT = Territorium.getAnzahlSpalten();
+    static int ROWCOUNT = Territorium.getAnzahlReihen();
+    
+    knoten[] weg = new knoten[COLCOUNT*ROWCOUNT];
+    int knotenZaehler = 0;
+    
+    int[][] karte;
+    int[][] scanneKarte() {
+  		karte = new int[ROWCOUNT][COLCOUNT];
+        for (int x = 0; x < karte.length; x++) {
+            for (int y = 0; y < karte.length; y++) {
+                if (Territorium.mauerDa(x, y)) {
+                    karte[x][y] = 1;
+                } else if (Territorium.getAnzahlKoerner(x, y) > 0) {
+                    karte[x][y] = 2;
+                } else if (Territorium.getAnzahlHamster(x, y) > 0) {
+                    karte[x][y] = 3;
+                } else {
+                    karte[x][y] = 0;
+                }
+            }
+        }
+        return karte;
+    }
+    
+    //Agenda
+    //0=Leer
+    //1=Mauer
+    //2=Korner
+    //3=Hamster
+    //4=Moeglicher Weg   
+    
+ 	 boolean canGo(int x, int y) {
+		return x>=0 && y>=0 && x< ROWCOUNT && y < COLCOUNT && karte[x][y] != 1 && karte[x][y] != 4;
+	}
+	
+	 void findRoute(int x, int y) {
+		karte[x][y] = 3;
+		if(!step(x,y)) {
+			hamster1.schreib("Ziel nicht erreichbar");
+		}
+	}
+	
+	
+     boolean step(int x, int y) {//rekusiver Aufruf
+
+		if(!canGo(x, y)) {		
+			return false;
+		}
+		
+		if(karte[x][y]==2) {
+			weg[knotenZaehler++] = new knoten(x,y);//knoten objekt erschaffen und anschließend knotenZaehler um 1 erhöhen
+			hamster1.schreib("Weg gefunden");
+			return true;
+		}
+		
+		karte[x][y] = 4;//Ueberschreibt Array als möglichen Weg
+		
+		if(step(x,y+1)) {//Sucht naechsten Knoten rechts neben Hamster
+			weg[knotenZaehler++] = new knoten(x,y);//knoten objekt erschaffen und anschließend knotenZaehler um 1 erhöhen
+			return true;
+		}
+		if(step(x,y-1)) {//Sucht naechsten Knoten links neben Hamster
+			weg[knotenZaehler++] = new knoten(x,y);//knoten objekt erschaffen und anschließend knotenZaehler um 1 erhöhen
+			return true;
+		}
+		if(step(x+1,y)) {//Sucht naechsten Knoten über neben Hamster
+			weg[knotenZaehler++] = new knoten(x,y);//knoten objekt erschaffen und anschließend knotenZaehler um 1 erhöhen
+			return true;
+		}
+		if(step(x-1,y)) {//Sucht naechsten Knoten unter neben Hamster
+			weg[knotenZaehler++] = new knoten(x,y);//knoten objekt erschaffen und anschließend knotenZaehler um 1 erhöhen
+			return true;
+		}
+		
+		karte[x][y] = 0;//Ueberschreibt den Weg von wo man kam
+		return false;
+	}
+	
+	void geheWeg() {//Knoten Array Rückwerts durchlaufen, um den weg zu finden 	
+		for(int i=knotenZaehler-1; i>=0; i--){//Array Wert fängt bei 0 an desshalb -1
+			int x = weg[i].x;
+			int y = weg[i].y;
+			
+			int altesX = hamster1.getReihe();
+			int altesY = hamster1.getSpalte();
+			
+			if (x > altesX){//Nach Sueden gehen
+				hamster1.setBlickrichtung(2);
+				hamster1.vor();
+			}
+			
+			if (x < altesX){//Nach Norden gehen
+				hamster1.setBlickrichtung(0);
+				hamster1.vor();
+			}
+			
+			if (y > altesY){//Nach Osten gehen
+				hamster1.setBlickrichtung(1);
+				hamster1.vor();
+			}
+			
+			if (y < altesY){//Nach Westen gehen
+				hamster1.setBlickrichtung(3);
+				hamster1.vor();
+			}
+		}
+		
+		// pruefe ob Hamster sich auf dem Korn befindet
+		if (hamster1.kornDa()) {
+			hamster1.nimm();
+			return;
+		}
+		
+	
+	}
+ 
+ 
+	 void printRoute() {
+		String output = "";
+		for (int i=0; i<ROWCOUNT; i++) {
+			for (int j=0; j<COLCOUNT; j++) {
+				output += karte[i][j] + " ";
+			}
+			output += "\n";
+		}
+		hamster1.schreib(output);
+	}
+
+	
+}
+void main() {
+    Backtracking backtracking = new Backtracking();
+    if (!Territorium.mauerDa(backtracking.standard.getReihe(), backtracking.standard.getSpalte())) {
+        backtracking.hamster1.init(backtracking.standard.getReihe(), backtracking.standard.getSpalte(),
+                backtracking.standard.getBlickrichtung(), backtracking.standard.getAnzahlKoerner());
+    } // Schaut ob auf dem Startfeld eine Mauer ist und initialisiert Hamster erst dann
+  
+    
+    int[][] karte = backtracking.scanneKarte();
+	backtracking.findRoute(backtracking.hamster1.getReihe(), backtracking.hamster1.getSpalte());
+	backtracking.printRoute(); 
+	backtracking.geheWeg();
+}
