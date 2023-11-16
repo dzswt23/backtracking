@@ -1,0 +1,13 @@
+/*object-oriented program*/void main() {
+	Hamster standard = Hamster.getStandardHamster();
+	
+	// Initialisierung
+    Tiefensuche tiefensuche = new Tiefensuche();
+    tiefensuche.getHamster().init(standard.getReihe(), standard.getSpalte(),
+                standard.getBlickrichtung(), standard.getAnzahlKoerner());
+  
+  	// Suche Weg
+    tiefensuche.scanneKarte();
+	tiefensuche.sucheRoute();
+	tiefensuche.geheWeg();
+}
