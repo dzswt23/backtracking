@@ -35,8 +35,6 @@ class Backtracking {//Tiefensuche
                     karte[x][y] = 1;
                 } else if (Territorium.getAnzahlKoerner(x, y) > 0) {
                     karte[x][y] = 2;
-                } else if (Territorium.getAnzahlHamster(x, y) > 0) {
-                    karte[x][y] = 3;
                 } else {
                     karte[x][y] = 0;
                 }
@@ -52,10 +50,11 @@ class Backtracking {//Tiefensuche
     //3=Hamster
     //4=Moeglicher Weg   
     
+  
  	 boolean canGo(int x, int y) {
 		return x>=0 && y>=0 && x< ROWCOUNT && y < COLCOUNT && karte[x][y] != 1 && karte[x][y] != 4;
 	}
-	
+
 	 void findRoute(int x, int y) {
 		karte[x][y] = 3;
 		if(!step(x,y)) {
@@ -69,32 +68,33 @@ class Backtracking {//Tiefensuche
 		if(!canGo(x, y)) {		
 			return false;
 		}
-		
+
 		if(karte[x][y]==2) {
-			weg[knotenZaehler++] = new knoten(x,y);//knoten objekt erschaffen und anschließend knotenZaehler um 1 erhöhen
+			weg[knotenZaehler] = new knoten(x,y);//knoten objekt erschaffen und anschließend knotenZaehler um 1 erhöhen
+			knotenZaehler++;
 			hamster1.schreib("Weg gefunden");
 			return true;
 		}
 		
 		karte[x][y] = 4;//Ueberschreibt Array als möglichen Weg
 		
+		if(step(x-1,y)) {//Sucht naechsten Knoten über  Hamster
+			weg[knotenZaehler++] = new knoten(x,y);//knoten objekt erschaffen und anschließend knotenZaehler um 1 erhöhen
+			return true;
+		}
 		if(step(x,y+1)) {//Sucht naechsten Knoten rechts neben Hamster
 			weg[knotenZaehler++] = new knoten(x,y);//knoten objekt erschaffen und anschließend knotenZaehler um 1 erhöhen
 			return true;
 		}
+		if(step(x+1,y)) {//Sucht naechsten Knoten unter Hamster
+			weg[knotenZaehler++] = new knoten(x,y);//knoten objekt erschaffen und anschließend knotenZaehler um 1 erhöhen
+			return true;
+		}
+	
 		if(step(x,y-1)) {//Sucht naechsten Knoten links neben Hamster
 			weg[knotenZaehler++] = new knoten(x,y);//knoten objekt erschaffen und anschließend knotenZaehler um 1 erhöhen
 			return true;
 		}
-		if(step(x+1,y)) {//Sucht naechsten Knoten über neben Hamster
-			weg[knotenZaehler++] = new knoten(x,y);//knoten objekt erschaffen und anschließend knotenZaehler um 1 erhöhen
-			return true;
-		}
-		if(step(x-1,y)) {//Sucht naechsten Knoten unter neben Hamster
-			weg[knotenZaehler++] = new knoten(x,y);//knoten objekt erschaffen und anschließend knotenZaehler um 1 erhöhen
-			return true;
-		}
-		
 		karte[x][y] = 0;//Ueberschreibt den Weg von wo man kam
 		return false;
 	}
