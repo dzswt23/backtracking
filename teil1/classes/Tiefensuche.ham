@@ -1,0 +1,159 @@
+/*class*//*
+* Legende
+* 0 = Leeres Feld
+* 1 = Mauer
+* 2 = Min. 1 Korn
+* 3 = Möglicher Weg
+*/
+public class Tiefensuche {
+	private final int ANZAHL_REIHEN, ANZAHL_SPALTEN;
+
+	private DrehHamster hamster; // eigener Hamster
+    private Knoten[] weg; // speichert den Weg zum Korn
+    private int knotenZaehler; // zählt alle Wegpunkte
+    private int[][] karte; // Abbild des Spielfelds
+    
+    public Tiefensuche() {
+    	hamster = new DrehHamster();
+    	ANZAHL_REIHEN = Territorium.getAnzahlReihen();
+    	ANZAHL_SPALTEN = Territorium.getAnzahlSpalten();
+    	weg = new Knoten[ANZAHL_REIHEN * ANZAHL_SPALTEN];
+    	knotenZaehler = 0;
+    }
+   
+    /*
+    * Scannt die Karte auf Mauern und Körner
+    */
+    public void scanneKarte() {
+  		karte = new int[ANZAHL_REIHEN][ANZAHL_SPALTEN];
+        for (int reihe = 0; reihe < karte.length; reihe++) {
+            for (int spalte = 0; spalte < karte[0].length; spalte++) {
+                if (Territorium.mauerDa(reihe, spalte)) {
+                    karte[reihe][spalte] = 1;
+                } else if (Territorium.getAnzahlKoerner(reihe, spalte) > 0) {
+                    karte[reihe][spalte] = 2;
+                } else {
+                    karte[reihe][spalte] = 0;
+                }
+            }
+        }
+    }   
+  
+  	/*
+  	* Prüfung, ob der Hamster zu der Position aus reihe und spalte gehen kann
+  	* Dazu gehört: Er darf das Spielfeld nicht verlassen
+  	* Dazu gehört: Er darf keine Mauer auf der Position sein
+  	* Dazu gehört: Er darf nocht nicht dort gewesen sein
+  	*/
+ 	public boolean darfGehen(int reihe, int spalte) {
+		return reihe >= 0 
+			&& spalte >= 0 
+			&& reihe < ANZAHL_REIHEN
+			&& spalte < ANZAHL_SPALTEN 
+			&& karte[reihe][spalte] != 1 
+			&& karte[reihe][spalte] != 3;
+	}
+
+	/*
+	* Setzt den Startpunkt für die Tiefensuche
+	* Ruft die step-Methode auf, um eine Route zum Korn zu finden
+	*/
+	public void sucheRoute() {
+		if (!sucheWeg(hamster.getReihe(), hamster.getSpalte())) {
+			hamster.schreib("Ziel nicht erreichbar");
+		}
+	}
+	
+	/*
+	* Sucht Weg vom Hamster zum Korn, durch rekursiven Methodenaufruf
+	*/
+    public boolean sucheWeg(int reihe, int spalte) {
+    	// Überprüft, ob der Hamster zu der Position gehen darf, Pfad kann hier nicht fortgesetzt werden
+		if (!darfGehen(reihe, spalte)) {		
+			return false;
+		}
+
+		// Korn gefunden
+		if (karte[reihe][spalte] == 2) {
+			weg[knotenZaehler++] = new Knoten(reihe, spalte);
+			return true;
+		}
+		
+		// Markiert den möglichen Weg in der Karten-Übersicht
+		karte[reihe][spalte] = 3;
+		
+		// Prüft nächsten Knoten über dem Hamster
+		if (sucheWeg(reihe - 1, spalte)) {
+			weg[knotenZaehler++] = new Knoten(reihe, spalte);
+			return true;
+		}
+		
+		// Prüft nächsten Knoten rechts neben dem Hamster
+		if (sucheWeg(reihe, spalte + 1)) {
+			weg[knotenZaehler++] = new Knoten(reihe, spalte);
+			return true;
+		}
+		
+		// Prüft nächsten Knoten unter dem Hamster
+		if (sucheWeg(reihe + 1, spalte)) {
+			weg[knotenZaehler++] = new Knoten(reihe, spalte);
+			return true;
+		}
+	
+		// Prüft nächsten Knoten links neben dem Hamster
+		if (sucheWeg(reihe, spalte-1)) {
+			weg[knotenZaehler++] = new Knoten(reihe, spalte);
+			return true;
+		}
+		
+		// Kennzeichnet den Knoten, von dem man gekommen ist, als bereits geprüft
+		karte[reihe][spalte] = 0;
+		return false;
+	}
+	
+	/*
+	* Lässt den Hamster den berechneteten Weg traversieren
+	*/
+	public void geheWeg() {
+		for (int i = knotenZaehler-1; i >= 0; i--) {
+			int reihe = weg[i].getReihe();
+			int spalte = weg[i].getSpalte();
+			
+			int alteReihe = hamster.getReihe();
+			int alteSpalte = hamster.getSpalte();
+			
+			// Nach Süden gehen
+			if (reihe > alteReihe){
+				hamster.setBlickrichtung(2);
+				hamster.vor();
+			}
+			
+			// Nach Norden gehen
+			if (reihe < alteReihe){
+				hamster.setBlickrichtung(0);
+				hamster.vor();
+			}
+			
+			// Nach Osten gehen
+			if (spalte > alteSpalte){
+				hamster.setBlickrichtung(1);
+				hamster.vor();
+			}
+			
+			if (spalte < alteSpalte){//Nach Westen gehen
+				hamster.setBlickrichtung(3);
+				hamster.vor();
+			}
+		}
+		
+		// Prüfe, ob der Hamster das Korn gefunden hat
+		if (hamster.kornDa()) {
+			hamster.nimm();
+			return;
+		}
+	}
+	
+	public DrehHamster getHamster() {
+		return this.hamster;
+	}
+}

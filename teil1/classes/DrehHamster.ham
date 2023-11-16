@@ -1,0 +1,7 @@
+/*class*/public class DrehHamster extends Hamster {
+    public void setBlickrichtung(int blickrichtung) {
+    	while (getBlickrichtung()!= blickrichtung) {
+    		linksUm();	
+    	}
+    }
+}
