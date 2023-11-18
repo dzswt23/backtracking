@@ -1,4 +1,4 @@
-/*class*/public class Tiefensuche {
+/*class*/public class Backtracking {
     private static final int ANZAHL_REIHEN = Territorium.getAnzahlReihen();
     private static final int ANZAHL_SPALTEN = Territorium.getAnzahlSpalten();
     private static final int LEERES_FELD = 0;
@@ -11,7 +11,7 @@
     private int knotenZaehler; // zählt alle Wegpunkte
     private int[][] karte; // Abbild des Spielfelds
 
-    public Tiefensuche() {
+    public Backtracking() {
         hamster = new DrehHamster();
         weg = new Knoten[ANZAHL_REIHEN * ANZAHL_SPALTEN];
         knotenZaehler = 0;
