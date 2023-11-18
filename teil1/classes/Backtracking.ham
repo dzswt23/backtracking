@@ -8,7 +8,7 @@
 
     private DrehHamster hamster; // eigener Hamster
     private Knoten[] weg; // speichert den Weg zum Korn
-    private int knotenZaehler; // zählt alle Wegpunkte
+    private int knotenZaehler; // zÃ¤hlt alle Wegpunkte
     private int[][] karte; // Abbild des Spielfelds
 
     public Backtracking() {
@@ -18,7 +18,7 @@
     }
 
     /*
-     * Scannt die Karte auf Mauern und Körner
+     * Scannt die Karte auf Mauern und KÃ¶rner
      */
     public void scanneKarte() {
         karte = new int[ANZAHL_REIHEN][ANZAHL_SPALTEN];
@@ -36,10 +36,10 @@
     }
 
     /*
-     * Prüfung, ob der Hamster zu der Position aus den Übergabeparametern reihe
-     * und spalte gehen kann Dazu gehört: Er darf das Spielfeld nicht verlassen
-     * Dazu gehört: Er darf keine Mauer auf der Position sein
-     * Dazu gehört: Er darf nocht nicht dort gewesen sein
+     * PrÃ¼fung, ob der Hamster zu der Position aus den Ãœbergabeparametern reihe
+     * und spalte gehen kann Dazu gehÃ¶rt: Er darf das Spielfeld nicht verlassen
+     * Dazu gehÃ¶rt: Er darf keine Mauer auf der Position sein
+     * Dazu gehÃ¶rt: Er darf nocht nicht dort gewesen sein
      */
     private boolean darfGehen(int reihe, int spalte) {
         return reihe >= 0 && spalte >= 0 && reihe < ANZAHL_REIHEN
@@ -48,8 +48,8 @@
     }
 
     /*
-     * Setzt den Startpunkt für die Tiefensuche
-     * Ruft die step-Methode auf, um eine Route zum Korn zu finden
+     * Setzt den Startpunkt fÃ¼r die Tiefensuche
+     * Ruft die sucheWeg-Methode auf, um eine Route zum Korn zu finden
      */
     public void sucheRoute() {
         if (!sucheWeg(hamster.getReihe(), hamster.getSpalte())) {
@@ -61,7 +61,7 @@
      * Sucht Weg vom Hamster zum Korn, durch rekursiven Methodenaufruf
      */
     private boolean sucheWeg(int reihe, int spalte) {
-        // Überprüft, ob der Hamster zu der Position gehen darf, Pfad kann hier
+        // ÃœberprÃ¼ft, ob der Hamster zu der Position gehen darf, Pfad kann hier
         // nicht fortgesetzt werden
         if (!darfGehen(reihe, spalte)) {
             return false;
@@ -73,41 +73,41 @@
             return true;
         }
 
-        // Markiert den möglichen Weg in der Karten-Übersicht
+        // Markiert den mÃ¶glichen Weg in der Karten-Ãœbersicht
         karte[reihe][spalte] = MOEGLICHER_WEG;
 
-        // Prüft nächsten Knoten über dem Hamster
+        // PrÃ¼ft nÃ¤chsten Knoten Ã¼ber dem Hamster
         if (sucheWeg(reihe - 1, spalte)) {
             weg[knotenZaehler++] = new Knoten(reihe, spalte);
             return true;
         }
 
-        // Prüft nächsten Knoten rechts neben dem Hamster
+        // PrÃ¼ft nÃ¤chsten Knoten rechts neben dem Hamster
         if (sucheWeg(reihe, spalte + 1)) {
             weg[knotenZaehler++] = new Knoten(reihe, spalte);
             return true;
         }
 
-        // Prüft nächsten Knoten unter dem Hamster
+        // PrÃ¼ft nÃ¤chsten Knoten unter dem Hamster
         if (sucheWeg(reihe + 1, spalte)) {
             weg[knotenZaehler++] = new Knoten(reihe, spalte);
             return true;
         }
 
-        // Prüft nächsten Knoten links neben dem Hamster
+        // PrÃ¼ft nÃ¤chsten Knoten links neben dem Hamster
         if (sucheWeg(reihe, spalte - 1)) {
             weg[knotenZaehler++] = new Knoten(reihe, spalte);
             return true;
         }
 
         // Kennzeichnet den Knoten, von dem man gekommen ist, als bereits
-        // geprüft
+        // geprÃ¼ft
         karte[reihe][spalte] = LEERES_FELD;
         return false;
     }
 
     /*
-     * Lässt den Hamster den berechneteten Weg traversieren
+     * LÃ¤sst den Hamster den berechneteten Weg traversieren
      */
     public void geheWeg() {
         for (int i = knotenZaehler - 1; i >= 0; i--) {
@@ -117,7 +117,7 @@
             int alteReihe = hamster.getReihe();
             int alteSpalte = hamster.getSpalte();
 
-            // Nach Süden gehen
+            // Nach SÃ¼den gehen
             if (reihe > alteReihe) {
                 hamster.setBlickrichtung(2);
                 hamster.vor();
@@ -142,7 +142,7 @@
             }
         }
 
-        // Prüfe, ob der Hamster das Korn gefunden hat
+        // PrÃ¼fe, ob der Hamster das Korn gefunden hat
         if (hamster.kornDa()) {
             hamster.nimm();
             return;
